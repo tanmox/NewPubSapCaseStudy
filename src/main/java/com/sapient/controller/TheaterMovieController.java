@@ -1,6 +1,7 @@
 package com.sapient.controller;
 
 import com.sapient.entity.TheaterMovie;
+import com.sapient.errorHandling.TheaterMovieNotFoundException;
 import com.sapient.request.TheaterMovieDeleteRequest;
 import com.sapient.request.TheaterMovieRequest;
 import com.sapient.request.TheaterMovieUpdateRequest;
@@ -45,13 +46,13 @@ import java.util.random.RandomGenerator;
 
             if (results.isEmpty()) {
                 log.info("No Content");
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                throw new TheaterMovieNotFoundException("Theater_Movie_Not_Found", "Movie For City " +movie+"_"+city + " not found");
             }
             else
                 return ResponseHandler.generateResponse("Response Generated", city, movie, trackingID, requestDate, results);
         } catch (Exception e) {
             log.info("Exception No Content");
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            throw new TheaterMovieNotFoundException("Theater_Movie_Not_Found", "Movie For City " +movie+"_"+city + " not found");
         }
 
     }
@@ -76,7 +77,7 @@ import java.util.random.RandomGenerator;
                 return ResponseHandler.generateResponse("Response Generated", tmRequest.getCity_name(), tmRequest.getMovie_name(), trackingID, requestDate, results);
         } catch (Exception e) {
             log.info("Exception No Content");
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            throw new TheaterMovieNotFoundException("Theater_Movie_Not_Found", "Movie For City " +tmRequest.getMovie_name()+"_"+tmRequest.getCity_name() + " not found");
         }
     }
 
@@ -100,7 +101,7 @@ import java.util.random.RandomGenerator;
                 return ResponseHandler.generateResponse("Response Generated", trackingID, requestDate, results);
         } catch (Exception e) {
             log.info("Exception No Content");
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            throw new TheaterMovieNotFoundException("Theater_Movie_Not_Found", "TM_ID " +tmUpdateRequest.getTm_ID() + " not found");
         }
     }
 
@@ -109,14 +110,12 @@ import java.util.random.RandomGenerator;
 
         try {
             log.info("Controller Delete Movie By Theater");
-            int trackingID = RandomGenerator.getDefault().nextInt();
-            Date requestDate = new Date();
             theaterMovieServiceImpl.deleteMovieByTheater(tmDelRequest);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         catch (Exception e) {
             log.info("Exception No Content");
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            throw new TheaterMovieNotFoundException("Theater_Movie_Not_Found", "TM_ID " +tmDelRequest.getTm_ID() + " not found");
         }
     }
 
